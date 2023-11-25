@@ -3,10 +3,10 @@
 internal class Ingredient
 {
     public string Name { get; set; }
-    public int ServingSize { get; set; }
+    public double ServingSize { get; set; }
     public NutritionInfo Nutrition { get; set; }
 
-    public Ingredient(string name, int servingSize, NutritionInfo nutrition)
+    public Ingredient(string name, double servingSize, NutritionInfo nutrition)
     {
         Name = name;
         ServingSize = servingSize;
@@ -23,26 +23,28 @@ internal class Ingredient
         public double Fibre { get; set; }
         public double Salt { get; set; }
         public double Calories { get; set; }
+
+        public NutritionInfo(double Protein, double Carbs, double Fats, double Sugars, double Saturates, double Fibre, double Salt, double Calories)
+        {
+            this.Protein = Protein;
+            this.Carbs = Carbs;
+            this.Fats = Fats;
+            this.Sugars = Sugars;
+            this.Saturates = Saturates;
+            this.Fibre = Fibre;
+            this.Salt = Salt;
+            this.Calories = Calories;
+        }
     }
 
-    public static Ingredient GetIngredient(int grams, string ingredient)
+    public static Ingredient FindIngredient(string ingredient)
     {
         List<Ingredient> ingredientList = new()
         {
             new Ingredient(
                 "sultanas",
                 30,
-                new NutritionInfo
-                {
-                    Protein = 0.8,
-                    Carbs = 20.8,
-                    Fats = 0.1,
-                    Sugars = 20.8,
-                    Saturates = 0,
-                    Fibre = 0.6,
-                    Salt = 0.01,
-                    Calories = 89
-                }
+                new NutritionInfo(0.8, 20.8, 0.1, 20.8, 0, 0.6, 0.01, 89)
             ),
         };
 
