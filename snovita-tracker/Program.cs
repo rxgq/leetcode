@@ -125,10 +125,15 @@ internal class Program
             totalCalories += ingredient.Nutrition.Calories;
         }
 
+        double totalWeight = totalProtein + totalCarbs + totalFats;
+        double proteinPercentage = (totalProtein / totalWeight) * 100;
+        double carbsPercentage = (totalCarbs / totalWeight) * 100;
+        double fatsPercentage = (totalFats / totalWeight) * 100;
+
         Console.WriteLine("\n\n\nTotal Macros for All Ingredients:\n" +
-            $"\n  - Protein".PadRight(20) + $"{Math.Round(totalProtein, 2)}g" +
-            $"\n  - Carbs".PadRight(20) + $"{Math.Round(totalCarbs, 2)}g" +
-            $"\n  - Fats".PadRight(20) + $"{Math.Round(totalFats, 2)}g" +
+            $"\n  - Protein".PadRight(20) + $"{Math.Round(totalProtein, 2)}g ({Math.Round(proteinPercentage, 2)}%)" +
+            $"\n  - Carbs".PadRight(20) + $"{Math.Round(totalCarbs, 2)}g ({Math.Round(carbsPercentage, 2)}%)" +
+            $"\n  - Fats".PadRight(20) + $"{Math.Round(totalFats, 2)}g ({Math.Round(fatsPercentage, 2)}%)" +
             $"\n  - Sugars".PadRight(20) + $"{Math.Round(totalSugars, 2)}g" +
             $"\n  - Saturates".PadRight(20) + $"{Math.Round(totalSaturates, 2)}g" +
             $"\n  - Fibre".PadRight(20) + $"{Math.Round(totalFibre, 2)}g" +
