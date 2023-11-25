@@ -6,38 +6,55 @@ internal class Program
 {
     static void Main() => GetIngredient();
 
-    List<Ingredient> totalIngredients = new();
+    static List<Ingredient> TotalIngredients = new();
 
     public static void GetIngredient()
     {
-        Console.Write("Enter grams: ");
+        Console.Clear();
 
-        if (!int.TryParse(Console.ReadLine(), out int grams))
+        double grams;
+
+        while (true)
         {
-            Console.WriteLine("Invalid input for grams. Please enter a valid integer.");
-            return;
+            Console.Write("Enter serving size (g): ");
+            string input = Console.ReadLine();
+
+            if (double.TryParse(input, out grams)) break;
+            else 
+            { 
+                Console.WriteLine("\n\tInvalid input. Please enter a valid numeric value for grams.\n\tPlease press enter."); 
+                Console.ReadKey(); Console.Clear();
+            }
         }
 
-        Console.Write("Enter ingredient: ");
+        Console.Write("\nEnter ingredient name: ");
         string? ingredient = Console.ReadLine();
 
         if (ingredient is not null) 
         {
-            Ingredient foundIngredient = Ingredient.FindIngredient(ingredient);
-            CalculateMacros(grams, foundIngredient, ingredient);
+            Ingredient foundIngredient = FindIngredient(ingredient);
 
-            Console.WriteLine("Enter another ingredient?");
-            string enterAnotherIngredient = Console.ReadLine().ToLower().Trim();
-            if (enterAnotherIngredient == "y") GetIngredient();
-        } 
+            if (foundIngredient is null) GetIngredient();
 
-        else Console.WriteLine("Ingredient cannot be null.");
+            else
+            {
+                CalculateMacros(grams, foundIngredient, ingredient);
+
+                Console.WriteLine("\nEnter another ingredient? (y/n)");
+                string enterAnotherIngredient = Console.ReadLine().ToLower().Trim();
+                if (enterAnotherIngredient == "y")
+                    GetIngredient();
+                else
+                    OutputIngredients();
+            }
+
+        }
+
+        else Console.WriteLine("\n\tIngredient cannot be null.");
     }
 
     public static void CalculateMacros(double grams, Ingredient foundIngredient, string ingredient)
     {
-        Console.WriteLine($"\nIngredient: {foundIngredient.Name}\n");
-
         double macroRatio = grams / foundIngredient.ServingSize;
 
         double newProtein = Math.Round(macroRatio * foundIngredient.Nutrition.Protein, 2);
@@ -51,8 +68,11 @@ internal class Program
 
         NutritionInfo newNutritionInfo = new(newProtein, newCarbs, newFats, newSugars, newSaturates, newFibre, newSalt, newCalories);
         Ingredient newIngredient = new(ingredient, grams, newNutritionInfo);
+        TotalIngredients.Add(newIngredient);
 
-        Console.WriteLine($"\nName: {newIngredient.Name}\nServing: {newIngredient.ServingSize}g\n\n\nNutrition:" +
+        Console.Clear();
+
+        Console.WriteLine($"Name: {newIngredient.Name}\nServing: {newIngredient.ServingSize}g\n\nNutrition:" +
             $"\n  - Protein".PadRight(20) + $"{newProtein}g" +
             $"\n  - Carbs".PadRight(20) + $"{newCarbs}g" +
             $"\n  - Fats".PadRight(20) + $"{newFats}g" +
@@ -60,9 +80,60 @@ internal class Program
             $"\n  - Saturates".PadRight(20) + $"{newSaturates}g" +
             $"\n  - Fibre".PadRight(20) + $"{newFibre}g" +
             $"\n  - Salt".PadRight(20) + $"{newSalt}g" +
-            $"\n  - Calories".PadRight(20) + $"{newCalories}kcal");
-
+            $"\n  - Calories".PadRight(20) + $"{newCalories}kcal\n\nThis has been added to your total ingredients list.\nCurrently holding: {TotalIngredients.Count}(s)");
     }
 
+    public static void OutputIngredients() 
+    {
+        Console.Clear();
+        foreach (var ingredient in TotalIngredients) 
+        {
+            Console.WriteLine($"\nName: {ingredient.Name}\nServing: {ingredient.ServingSize}g\n\n\nNutrition:" +
+                $"\n  - Protein".PadRight(20) + $"{ingredient.Nutrition.Protein}g" +
+                $"\n  - Carbs".PadRight(20) + $"{ingredient.Nutrition.Carbs}g" +
+                $"\n  - Fats".PadRight(20) + $"{ingredient.Nutrition.Fats}g" +
+                $"\n  - Sugars".PadRight(20) + $"{ingredient.Nutrition.Sugars}g" +
+                $"\n  - Saturates".PadRight(20) + $"{ingredient.Nutrition.Saturates}g" +
+                $"\n  - Fibre".PadRight(20) + $"{ingredient.Nutrition.Fibre}g" +
+                $"\n  - Salt".PadRight(20) + $"{ingredient.Nutrition.Salt}g" +
+                $"\n  - Calories".PadRight(20) + $"{ingredient.Nutrition.Calories}kcal\n\n\n");
+        }
+        Console.WriteLine("Your total ingredients are listed above.");
+        OutputTotalMacros();
+    }
+
+    public static void OutputTotalMacros()
+    {
+        double totalProtein = 0;
+        double totalCarbs = 0;
+        double totalFats = 0;
+        double totalSugars = 0;
+        double totalSaturates = 0;
+        double totalFibre = 0;
+        double totalSalt = 0;
+        double totalCalories = 0;
+
+        foreach (var ingredient in TotalIngredients)
+        {
+            totalProtein += ingredient.Nutrition.Protein;
+            totalCarbs += ingredient.Nutrition.Carbs;
+            totalFats += ingredient.Nutrition.Fats;
+            totalSugars += ingredient.Nutrition.Sugars;
+            totalSaturates += ingredient.Nutrition.Saturates;
+            totalFibre += ingredient.Nutrition.Fibre;
+            totalSalt += ingredient.Nutrition.Salt;
+            totalCalories += ingredient.Nutrition.Calories;
+        }
+
+        Console.WriteLine("\n\n\nTotal Macros for All Ingredients:\n" +
+            $"\n  - Protein".PadRight(20) + $"{Math.Round(totalProtein, 2)}g" +
+            $"\n  - Carbs".PadRight(20) + $"{Math.Round(totalCarbs, 2)}g" +
+            $"\n  - Fats".PadRight(20) + $"{Math.Round(totalFats, 2)}g" +
+            $"\n  - Sugars".PadRight(20) + $"{Math.Round(totalSugars, 2)}g" +
+            $"\n  - Saturates".PadRight(20) + $"{Math.Round(totalSaturates, 2)}g" +
+            $"\n  - Fibre".PadRight(20) + $"{Math.Round(totalFibre, 2)}g" +
+            $"\n  - Salt".PadRight(20) + $"{Math.Round(totalSalt, 2)}g" +
+            $"\n  - Calories".PadRight(20) + $"{Math.Round(totalCalories, 2)}kcal\n\n\n");
+    }
 
 }

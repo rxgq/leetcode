@@ -51,6 +51,11 @@ internal class Ingredient
         Ingredient foundIngredient = ingredientList.FirstOrDefault(i => i.Name == ingredient);
 
         if (foundIngredient is not null) return foundIngredient;
-        throw new InvalidOperationException($"Ingredient '{ingredient}' not found.");
+        else 
+        {
+            Console.WriteLine($"\nThis ingredient is not registered.\nPress enter to return.");
+            Console.ReadKey();
+            return foundIngredient;
+        }
     }
 }
