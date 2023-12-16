@@ -7,10 +7,10 @@ internal class Program
     public const int GRID_WIDTH = 16;
     public const int GRID_HEIGHT = 8;
     public const string NODE = ".";
-    public const int SIMULATION_SPEED_MS = 1000;
-    public const int ENTITY_COUNT = 2;
-    public const int FOOD_COUNT = 5;
-    public const int ENTITY_LIST_POSITION_X = 111;
+    public const int SIMULATION_SPEED_MS = 200;
+    public const int ENTITY_COUNT = 4;
+    public const int FOOD_COUNT = 8;
+    public const int ENTITY_LIST_POSITION_X = 90;
     public const int ITERATION_POSITION_X = GRID_WIDTH + 1;
 
     static readonly List<Entity> ListOfEntities = new();
@@ -85,6 +85,7 @@ internal class Program
 
             Console.SetCursorPosition(positionX, positionY);
             Food newFood = new(positionX, positionY);
+            ListOfFood.Add(newFood);
 
             Console.ForegroundColor = newFood.FoodColor;
             Console.Write(newFood.Character);
@@ -103,7 +104,7 @@ internal class Program
         {
             entityIDCounter++;
             Console.SetCursorPosition(ENTITY_LIST_POSITION_X, entityIDCounter);
-            Console.Write(entity.EntityName);
+            Console.Write($"{entity.EntityName} | Food: {entity.collectedFood.Count}");
         }
     }
 }

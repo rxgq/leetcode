@@ -9,6 +9,8 @@ internal class Entity
     public int PositionX;
     public int PositionY;
 
+    public List<Food> collectedFood = new();
+
     public Entity(string entityName, int positionX, int positionY)
     {
         EntityName = entityName;
@@ -49,15 +51,12 @@ internal class Entity
         if (FoodAtPosition(PositionX, PositionY))
         {
             Console.SetCursorPosition(PositionX, PositionY);
-            Console.Write("F");
         }
-        else
-        {
-            Console.ForegroundColor = EntityColour;
-            Console.SetCursorPosition(PositionX, PositionY);
-            Console.Write(Character);
-            Console.ResetColor();
-        }
+
+        Console.ForegroundColor = EntityColour;
+        Console.SetCursorPosition(PositionX, PositionY);
+        Console.Write(Character);
+        Console.ResetColor();
     }
 
     private bool FoodAtPosition(int positionX, int positionY)
@@ -66,7 +65,8 @@ internal class Entity
         {
             if (food.PositionX == positionX && food.PositionY == positionY)
             {
-                Program.ListOfFood.Remove(food); 
+                Program.ListOfFood.Remove(food);
+                collectedFood.Add(food);
                 return true;
             }
         }
