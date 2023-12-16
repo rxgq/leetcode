@@ -8,8 +8,10 @@ internal class Entity
 
     public int PositionX;
     public int PositionY;
+    public int IterationsUntilDeath = 20;
 
-    public List<Food> collectedFood = new();
+    public List<Food> CollectedFood = new();
+    
 
     public Entity(string entityName, int positionX, int positionY)
     {
@@ -26,51 +28,92 @@ internal class Entity
         Random random = new();
         int direction = random.Next(1, 5);
 
+        int newPosX = PositionX;
+        int newPosY = PositionY;
+
         switch (direction)
         {
             case 1:
-                PositionY = Math.Min(Program.GRID_HEIGHT - 1, PositionY + 1); // down
+                newPosY = Math.Min(Program.GRID_HEIGHT - 1, PositionY + 1); // down
                 break;
 
             case 2:
-                PositionY = Math.Max(0, PositionY - 1); // up
+                newPosY = Math.Max(0, PositionY - 1); // up
                 break;
 
             case 3:
-                PositionX = Math.Min(Program.GRID_WIDTH - 1, PositionX + 1); // right
+                newPosX = Math.Min(Program.GRID_WIDTH - 1, PositionX + 1); // right
                 break;
 
             case 4:
-                PositionX = Math.Max(0, PositionX - 1); // left
+                newPosX = Math.Max(0, PositionX - 1); // left
                 break;
         }
 
-        Console.SetCursorPosition(previousX, previousY);
-        Console.Write(Program.NODE);
-
-        if (FoodAtPosition(PositionX, PositionY))
+        if (!EntityAtPosition(newPosX, newPosY))
         {
-            Console.SetCursorPosition(PositionX, PositionY);
-        }
+            Console.SetCursorPosition(previousX, previousY);
+            Console.Write(Program.NODE);
 
-        Console.ForegroundColor = EntityColour;
-        Console.SetCursorPosition(PositionX, PositionY);
-        Console.Write(Character);
-        Console.ResetColor();
+            if (FoodAtPosition(newPosX, newPosY))
+            {
+                Console.SetCursorPosition(newPosX, newPosY);
+            }
+
+            Console.ForegroundColor = EntityColour;
+            Console.SetCursorPosition(newPosX, newPosY);
+            Console.Write(Character);
+            Console.ResetColor();
+
+            PositionX = newPosX;
+            PositionY = newPosY;
+        }
     }
+
 
     private bool FoodAtPosition(int positionX, int positionY)
     {
+        Food foodToRemove = null;
+
         foreach (Food food in Program.ListOfFood)
         {
             if (food.PositionX == positionX && food.PositionY == positionY)
             {
-                Program.ListOfFood.Remove(food);
-                collectedFood.Add(food);
+                foodToRemove = food;
+                break;
+            }
+        }
+
+        if (foodToRemove != null)
+        {
+            Program.ListOfFood.Remove(foodToRemove);
+            CollectedFood.Add(foodToRemove);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public bool EntityAtPosition(int positionX, int positionY) 
+    {
+        foreach (Entity entity in Program.ListOfEntities)
+        {
+            if (entity.PositionX == positionX && entity.PositionY == positionY)
+            {
                 return true;
             }
         }
         return false;
+    }
+
+    public void ConsumeFood() 
+    {
+        if (CollectedFood.Count > 0) 
+        {
+            CollectedFood.RemoveAt(0);
+            IterationsUntilDeath = 20;
+        }
     }
 }
 

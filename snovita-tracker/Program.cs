@@ -8,12 +8,12 @@ internal class Program
     public const int GRID_HEIGHT = 8;
     public const string NODE = ".";
     public const int SIMULATION_SPEED_MS = 200;
-    public const int ENTITY_COUNT = 4;
-    public const int FOOD_COUNT = 8;
-    public const int ENTITY_LIST_POSITION_X = 90;
+    public const int ENTITY_COUNT = 8;
+    public const int FOOD_COUNT = 32;
+    public const int ENTITY_LIST_POSITION_X = 80;
     public const int ITERATION_POSITION_X = GRID_WIDTH + 1;
 
-    static readonly List<Entity> ListOfEntities = new();
+    public static readonly List<Entity> ListOfEntities = new();
     public static readonly List<Food> ListOfFood = new();
 
     public static Random Random = new();
@@ -23,8 +23,7 @@ internal class Program
     public static void BuildSimulation()
     {
         BuildNodes();
-
-        List<Entity> entities = CreateEntities();
+        CreateEntities();
         CreateFood();
 
         int iteration = -1;
@@ -36,12 +35,47 @@ internal class Program
 
             Thread.Sleep(SIMULATION_SPEED_MS);
 
-            foreach (Entity entity in entities)
+            if (ListOfEntities.Count == 0)
             {
+                Console.SetCursorPosition(ITERATION_POSITION_X, 0);
+                Console.Write("All entities are dead.");
+                Console.ReadKey();
+                return;
+            }
+
+            var entitiesToRemove = ListOfEntities.Where(entity => entity.IterationsUntilDeath == 0).ToList();
+
+            foreach (Entity entityToRemove in entitiesToRemove)
+            {
+                ListOfEntities.Remove(entityToRemove);
+                Console.SetCursorPosition(entityToRemove.PositionX, entityToRemove.PositionY);
+                Console.Write(NODE);
+            }
+
+            foreach (Entity entity in ListOfEntities)
+            {
+                DisplayControlVariables(iteration);
+
+                entity.IterationsUntilDeath--;
+
+                if (entity.IterationsUntilDeath == 0)
+                {
+                    entitiesToRemove.Add(entity);
+
+                    Console.SetCursorPosition(entity.PositionX, entity.PositionY);
+                    Console.Write(NODE);
+                }
+
+                if (entity.CollectedFood.Count > 0 && entity.IterationsUntilDeath == 1)
+                {
+                    entity.ConsumeFood();
+                }
+
                 entity.Move();
             }
         }
     }
+
 
     public static void BuildNodes()
     {
@@ -63,18 +97,25 @@ internal class Program
 
         for (int i = 0; i < ENTITY_COUNT; i++)
         {
-            string entityName = $"Entity {entityID++}";
+            string entityName = $"Entity {entityID}";
 
-            int positionY = Random.Next(0, GRID_HEIGHT);
-            int positionX = Random.Next(0, GRID_WIDTH);
+            int positionX, positionY;
+            do
+            {
+                positionY = Random.Next(0, GRID_HEIGHT);
+                positionX = Random.Next(0, GRID_WIDTH);
+            } while (ListOfEntities.Any(entity => entity.PositionX == positionX && entity.PositionY == positionY));
 
             Console.SetCursorPosition(positionX, positionY);
             Entity newEntity = new(entityName, positionX, positionY);
 
             ListOfEntities.Add(newEntity);
+            entityID++;
         }
         return ListOfEntities;
     }
+
+
 
     public static void CreateFood() 
     {
@@ -104,7 +145,7 @@ internal class Program
         {
             entityIDCounter++;
             Console.SetCursorPosition(ENTITY_LIST_POSITION_X, entityIDCounter);
-            Console.Write($"{entity.EntityName} | Food: {entity.collectedFood.Count}");
+            Console.Write($"{entity.EntityName} | Food: {entity.CollectedFood.Count} | Death: {entity.IterationsUntilDeath} ");
         }
     }
 }
