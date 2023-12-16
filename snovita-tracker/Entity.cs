@@ -8,7 +8,7 @@ internal class Entity
 
     public int PositionX;
     public int PositionY;
-    public int IterationsUntilDeath = 25;
+    public int IterationsUntilDeath = 40;
 
     public List<Food> CollectedFood = new();
     
@@ -115,7 +115,6 @@ internal class Entity
             IterationsUntilDeath = 20;
         }
     }
-
     public void Reproduce()
     {
         for (int i = -1; i <= 1; i++)
@@ -126,10 +125,10 @@ internal class Entity
                 int newPositionY = PositionY + j;
 
                 if (newPositionX >= 0 && newPositionX < Program.GRID_WIDTH &&
-                    newPositionY >= 0 && newPositionX < Program.GRID_HEIGHT &&
+                    newPositionY >= 0 && newPositionY < Program.GRID_HEIGHT &&
                     !EntityAtPosition(newPositionX, newPositionY))
                 {
-                    Entity newEntity = new Entity($"Entity {Program.ListOfEntities.Count + 1}", newPositionX, newPositionY);
+                    Entity newEntity = new($"Entity {Program.ListOfEntities.Count + 1}", newPositionX, newPositionY);
                     Program.ListOfEntities.Add(newEntity);
 
                     Console.SetCursorPosition(newPositionX, newPositionY);

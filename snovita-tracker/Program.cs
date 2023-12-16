@@ -2,19 +2,21 @@
 
 internal class Program
 {
-    public const int GRID_WIDTH = 16;
-    public const int GRID_HEIGHT = 8;
+    public const int GRID_WIDTH = 32;
+    public const int GRID_HEIGHT = 16;
     public const string NODE = ".";
-    public const int SIMULATION_SPEED_MS = 100;
-    public const int ENTITY_COUNT = 2;
-    public const int FOOD_COUNT = 40;
-    public const int ENTITY_LIST_POSITION_X = 80;
+    public const int SIMULATION_SPEED_MS = 10;
+    public const int ENTITY_COUNT = 1;
+    public const int FOOD_COUNT_PER_ITERATION = 2;
     public const int ITERATION_POSITION_X = GRID_WIDTH + 1;
 
     public static readonly List<Entity> ListOfEntities = new();
     public static readonly List<Food> ListOfFood = new();
 
     public static Random Random = new();
+
+    public static double averageEntityCount = 0;
+    public static int highestEntityCount = 0;
 
     static void Main() => BuildSimulation();
 
@@ -28,7 +30,15 @@ internal class Program
 
         while (true)
         {
+            CreateFood();
             iteration++;
+
+            if (ListOfEntities.Count > highestEntityCount) 
+            { 
+                highestEntityCount = ListOfEntities.Count;
+            }
+
+            averageEntityCount += ListOfEntities.Count;
 
             Thread.Sleep(SIMULATION_SPEED_MS);
 
@@ -119,7 +129,7 @@ internal class Program
 
     public static void CreateFood() 
     {
-        for (int i = 0; i < FOOD_COUNT; i++)
+        for (int i = 0; i < FOOD_COUNT_PER_ITERATION; i++)
         {
             int positionY = Random.Next(0, GRID_HEIGHT);
             int positionX = Random.Next(0, GRID_WIDTH);
@@ -138,14 +148,15 @@ internal class Program
     {
 
         Console.SetCursorPosition(ITERATION_POSITION_X, 0);
-        Console.WriteLine($"Iteration {iteration}");
+        Console.WriteLine($"Iteration        {iteration} ");
 
-        int entityIDCounter = -1;
-        foreach (Entity entity in ListOfEntities)
-        {
-            entityIDCounter++;
-            Console.SetCursorPosition(ENTITY_LIST_POSITION_X, entityIDCounter);
-            Console.Write($"{entity.EntityName} | Food: {entity.CollectedFood.Count} | Health: {entity.IterationsUntilDeath} ");
-        }
+        Console.SetCursorPosition(ITERATION_POSITION_X, 2);
+        Console.WriteLine($"Entity Count     {ListOfEntities.Count} ");
+
+        Console.SetCursorPosition(ITERATION_POSITION_X, 3);
+        Console.WriteLine($"Max Entities     {highestEntityCount} ");
+
+        Console.SetCursorPosition(ITERATION_POSITION_X, 4);
+        Console.WriteLine($"Average Entities {Math.Round((double)averageEntityCount / iteration, 2)} ");
     }
 }
