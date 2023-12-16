@@ -1,16 +1,17 @@
-﻿using life;
+﻿namespace life;
 
 internal class Entity
 {
     public string EntityName;
     public string Character = "0";
+    public ConsoleColor EntityColour = ConsoleColor.Green;
+
     public int PositionX;
     public int PositionY;
 
-    public Entity(string entityName, string character, int positionX, int positionY)
+    public Entity(string entityName, int positionX, int positionY)
     {
         EntityName = entityName;
-        Character = character;
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -23,7 +24,7 @@ internal class Entity
         Random random = new();
         int direction = random.Next(1, 5);
 
-        switch (direction) 
+        switch (direction)
         {
             case 1:
                 PositionY = Math.Min(Program.GRID_HEIGHT - 1, PositionY + 1); // down
@@ -45,9 +46,31 @@ internal class Entity
         Console.SetCursorPosition(previousX, previousY);
         Console.Write(Program.NODE);
 
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.SetCursorPosition(PositionX, PositionY);
-        Console.Write(Character);
-        Console.ResetColor();
+        if (FoodAtPosition(PositionX, PositionY))
+        {
+            Console.SetCursorPosition(PositionX, PositionY);
+            Console.Write("F");
+        }
+        else
+        {
+            Console.ForegroundColor = EntityColour;
+            Console.SetCursorPosition(PositionX, PositionY);
+            Console.Write(Character);
+            Console.ResetColor();
+        }
+    }
+
+    private bool FoodAtPosition(int positionX, int positionY)
+    {
+        foreach (Food food in Program.ListOfFood)
+        {
+            if (food.PositionX == positionX && food.PositionY == positionY)
+            {
+                Program.ListOfFood.Remove(food); 
+                return true;
+            }
+        }
+        return false;
     }
 }
+
