@@ -1,15 +1,13 @@
-﻿using System.Reflection.PortableExecutable;
-
-namespace life;
+﻿namespace life;
 
 internal class Program
 {
     public const int GRID_WIDTH = 16;
     public const int GRID_HEIGHT = 8;
     public const string NODE = ".";
-    public const int SIMULATION_SPEED_MS = 200;
-    public const int ENTITY_COUNT = 8;
-    public const int FOOD_COUNT = 32;
+    public const int SIMULATION_SPEED_MS = 100;
+    public const int ENTITY_COUNT = 2;
+    public const int FOOD_COUNT = 40;
     public const int ENTITY_LIST_POSITION_X = 80;
     public const int ITERATION_POSITION_X = GRID_WIDTH + 1;
 
@@ -31,30 +29,23 @@ internal class Program
         while (true)
         {
             iteration++;
-            DisplayControlVariables(iteration);
 
             Thread.Sleep(SIMULATION_SPEED_MS);
 
             if (ListOfEntities.Count == 0)
             {
+                Console.Clear();
                 Console.SetCursorPosition(ITERATION_POSITION_X, 0);
-                Console.Write("All entities are dead.");
+                Console.Write($"All entities are dead. Final Iteration: {iteration}");
                 Console.ReadKey();
                 return;
             }
 
-            var entitiesToRemove = ListOfEntities.Where(entity => entity.IterationsUntilDeath == 0).ToList();
+            List<Entity> entitiesToRemove = new List<Entity>();
+            DisplayControlVariables(iteration);
 
-            foreach (Entity entityToRemove in entitiesToRemove)
+            foreach (Entity entity in ListOfEntities.ToList())
             {
-                ListOfEntities.Remove(entityToRemove);
-                Console.SetCursorPosition(entityToRemove.PositionX, entityToRemove.PositionY);
-                Console.Write(NODE);
-            }
-
-            foreach (Entity entity in ListOfEntities)
-            {
-                DisplayControlVariables(iteration);
 
                 entity.IterationsUntilDeath--;
 
@@ -66,6 +57,11 @@ internal class Program
                     Console.Write(NODE);
                 }
 
+                if (entity.CollectedFood.Count > 1)
+                {
+                    entity.Reproduce();
+                }
+
                 if (entity.CollectedFood.Count > 0 && entity.IterationsUntilDeath == 1)
                 {
                     entity.ConsumeFood();
@@ -73,9 +69,15 @@ internal class Program
 
                 entity.Move();
             }
+
+            foreach (Entity entityToRemove in entitiesToRemove)
+            {
+                ListOfEntities.Remove(entityToRemove);
+                Console.SetCursorPosition(entityToRemove.PositionX, entityToRemove.PositionY);
+                Console.Write(NODE);
+            }
         }
     }
-
 
     public static void BuildNodes()
     {
@@ -115,8 +117,6 @@ internal class Program
         return ListOfEntities;
     }
 
-
-
     public static void CreateFood() 
     {
         for (int i = 0; i < FOOD_COUNT; i++)
@@ -145,7 +145,7 @@ internal class Program
         {
             entityIDCounter++;
             Console.SetCursorPosition(ENTITY_LIST_POSITION_X, entityIDCounter);
-            Console.Write($"{entity.EntityName} | Food: {entity.CollectedFood.Count} | Death: {entity.IterationsUntilDeath} ");
+            Console.Write($"{entity.EntityName} | Food: {entity.CollectedFood.Count} | Health: {entity.IterationsUntilDeath} ");
         }
     }
 }

@@ -4,11 +4,11 @@ internal class Entity
 {
     public string EntityName;
     public string Character = "0";
-    public ConsoleColor EntityColour = ConsoleColor.Green;
+    public ConsoleColor EntityColour = ConsoleColor.Yellow;
 
     public int PositionX;
     public int PositionY;
-    public int IterationsUntilDeath = 20;
+    public int IterationsUntilDeath = 25;
 
     public List<Food> CollectedFood = new();
     
@@ -115,5 +115,35 @@ internal class Entity
             IterationsUntilDeath = 20;
         }
     }
+
+    public void Reproduce()
+    {
+        for (int i = -1; i <= 1; i++)
+        {
+            for (int j = -1; j <= 1; j++)
+            {
+                int newPositionX = PositionX + i;
+                int newPositionY = PositionY + j;
+
+                if (newPositionX >= 0 && newPositionX < Program.GRID_WIDTH &&
+                    newPositionY >= 0 && newPositionX < Program.GRID_HEIGHT &&
+                    !EntityAtPosition(newPositionX, newPositionY))
+                {
+                    Entity newEntity = new Entity($"Entity {Program.ListOfEntities.Count + 1}", newPositionX, newPositionY);
+                    Program.ListOfEntities.Add(newEntity);
+
+                    Console.SetCursorPosition(newPositionX, newPositionY);
+                    Console.ForegroundColor = newEntity.EntityColour;
+                    Console.Write(newEntity.Character);
+                    Console.ResetColor();
+
+                    CollectedFood.RemoveAt(0);
+
+                    return;
+                }
+            }
+        }
+    }
+
 }
 
