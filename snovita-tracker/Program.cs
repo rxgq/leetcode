@@ -2,12 +2,14 @@
 
 internal class Program
 {
-    const int GRID_WIDTH = 24;
-    const int GRID_HEIGHT = 12;
-    const string NODE = ".";
-    const string ENTITY = "0";
+    public const int GRID_WIDTH = 24;
+    public const int GRID_HEIGHT = 12;
+    public const string NODE = ".";
+    public const int SIMULATION_SPEED_MS = 100;
 
-    static void Main()
+    static void Main() => Run();
+
+    public static void BuildNodes() 
     {
         for (var i = 0; i < GRID_HEIGHT; i++)
         {
@@ -19,17 +21,30 @@ internal class Program
             }
             Console.WriteLine();
         }
-        
-        CreateEntity();
     }
 
-    public static void CreateEntity() 
+    public static Entity CreateEntity()
     {
         Random random = new();
-        int positionX = random.Next(0, GRID_HEIGHT);
-        int positionY = random.Next(0, GRID_WIDTH);
+        int positionY = random.Next(0, GRID_HEIGHT);
+        int positionX = random.Next(0, GRID_WIDTH);
 
-        Console.SetCursorPosition(positionY, positionX);
-        Console.WriteLine(ENTITY);
+        Console.SetCursorPosition(positionX, positionY);
+        Entity entity = new("0", positionX, positionY);
+        Console.WriteLine(entity.Character);
+
+        return entity;
+    }
+
+    public static void Run() 
+    {
+        BuildNodes();
+        Entity entity = CreateEntity();
+
+        while (true)
+        {
+            Thread.Sleep(SIMULATION_SPEED_MS);
+            entity.Move();
+        }
     }
 }
