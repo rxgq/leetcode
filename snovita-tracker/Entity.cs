@@ -2,12 +2,14 @@
 
 internal class Entity
 {
+    public string EntityName;
     public string Character = "0";
     public int PositionX;
     public int PositionY;
 
-    public Entity(string character, int positionX, int positionY)
+    public Entity(string entityName, string character, int positionX, int positionY)
     {
+        EntityName = entityName;
         Character = character;
         PositionX = positionX;
         PositionY = positionY;
@@ -19,7 +21,7 @@ internal class Entity
         int previousY = PositionY;
 
         Random random = new();
-        int direction = random.Next(0, 5); // generates 1 or 2
+        int direction = random.Next(1, 5);
 
         switch (direction) 
         {
@@ -43,7 +45,9 @@ internal class Entity
         Console.SetCursorPosition(previousX, previousY);
         Console.Write(Program.NODE);
 
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.SetCursorPosition(PositionX, PositionY);
         Console.Write(Character);
+        Console.ResetColor();
     }
 }

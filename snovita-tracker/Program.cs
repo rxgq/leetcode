@@ -1,4 +1,6 @@
-﻿namespace life;
+﻿using Microsoft.VisualBasic;
+
+namespace life;
 
 internal class Program
 {
@@ -6,10 +8,14 @@ internal class Program
     public const int GRID_HEIGHT = 12;
     public const string NODE = ".";
     public const int SIMULATION_SPEED_MS = 100;
+    public const int ENTITY_COUNT = 25;
+    public const int ENTITY_LIST_POSITION_X = 111;
+
+    static readonly List<Entity> entities = new();
 
     static void Main() => Run();
 
-    public static void BuildNodes() 
+    public static void BuildNodes()
     {
         for (var i = 0; i < GRID_HEIGHT; i++)
         {
@@ -23,28 +29,61 @@ internal class Program
         }
     }
 
-    public static Entity CreateEntity()
+    public static List<Entity> CreateEntities()
     {
         Random random = new();
-        int positionY = random.Next(0, GRID_HEIGHT);
-        int positionX = random.Next(0, GRID_WIDTH);
 
-        Console.SetCursorPosition(positionX, positionY);
-        Entity entity = new("0", positionX, positionY);
-        Console.WriteLine(entity.Character);
+        int entityID = 0;
 
-        return entity;
+
+        for (int i = 0; i < ENTITY_COUNT; i++)
+        {
+            string entityName = $"Entity {entityID++}";
+
+            int positionY = random.Next(0, GRID_HEIGHT);
+            int positionX = random.Next(0, GRID_WIDTH);
+
+            Console.SetCursorPosition(positionX, positionY);
+            Entity entity = new(entityName, "O", positionX, positionY);
+
+            entities.Add(entity);
+        }
+        return entities;
     }
 
-    public static void Run() 
+    public static void Run()
     {
         BuildNodes();
-        Entity entity = CreateEntity();
+
+        List<Entity> entities = CreateEntities();
+        int iteration = -1;
 
         while (true)
         {
+            iteration++;
+            DisplayControlVariables(iteration);
+
             Thread.Sleep(SIMULATION_SPEED_MS);
-            entity.Move();
+
+            foreach (Entity entity in entities)
+            {
+                entity.Move();
+            }
+        }
+    }
+
+    public static void DisplayControlVariables(int iteration) 
+    {
+
+        Console.SetCursorPosition(25, 0);
+        Console.WriteLine($"Iteration {iteration}");
+
+        int entityIDCounter = -1;
+        foreach (Entity entity in entities)
+        {
+            entityIDCounter++;
+            Console.SetCursorPosition(ENTITY_LIST_POSITION_X, entityIDCounter);
+            Console.Write(entity.EntityName);
         }
     }
 }
