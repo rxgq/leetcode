@@ -11,7 +11,11 @@ internal class Entity
     public bool FoodPatternGene;
 
     public List<Food> CollectedFood = new();
-    
+
+    int upValue = 1;
+    int downValue = 1;
+    int leftValue = 1;
+    int rightValue = 1;
 
     public Entity(int positionX, int positionY, bool foodPatternGene, ConsoleColor entityColour)
     {
@@ -91,7 +95,6 @@ internal class Entity
             CollectedFood.Add(foodToRemove);
             return true;
         }
-
         return false;
     }
 
@@ -149,6 +152,56 @@ internal class Entity
                     return;
                 }
             }
+        }
+    }
+
+    public void FoodPatternMove()
+    {
+        double decayFactor = 0.9;
+
+        upValue = (int)Math.Max(1, upValue * decayFactor);
+        downValue = (int)Math.Max(1, downValue * decayFactor);
+        leftValue = (int)Math.Max(1, leftValue * decayFactor);
+        rightValue = (int)Math.Max(1, rightValue * decayFactor);
+
+        double totalSum = upValue + downValue + leftValue + rightValue;
+
+        double upValuePercentage = (100 / totalSum) * upValue;
+        double downValuePercentage = (100 / totalSum) * downValue;
+        double leftValuePercentage = (100 / totalSum) * leftValue;
+        double rightValuePercentage = (100 / totalSum) * rightValue;
+
+        double randomNumber = new Random().NextDouble() * 100;
+
+        if (randomNumber < upValuePercentage) MoveEntity(0, -1, ref upValue);
+        else if (randomNumber < upValuePercentage + downValuePercentage) MoveEntity(0, 1, ref downValue);
+        else if (randomNumber < upValuePercentage + downValuePercentage + leftValuePercentage) MoveEntity(-1, 0, ref leftValue);
+        else MoveEntity(1, 0, ref rightValue);
+    }
+
+    private void MoveEntity(int deltaX, int deltaY, ref int directionValue)
+    {
+        int newPosX = Math.Max(0, Math.Min(PositionX + deltaX, Program.GRID_WIDTH - 1));
+        int newPosY = Math.Max(0, Math.Min(PositionY + deltaY, Program.GRID_HEIGHT - 1));
+
+        if (!EntityOrFoodClusterAtPosition(newPosX, newPosY))
+        {
+            Console.SetCursorPosition(PositionX, PositionY);
+            Console.Write(Program.NODE);
+
+            if (FoodAtPosition(newPosX, newPosY))
+            {
+                Console.SetCursorPosition(newPosX, newPosY);
+                directionValue++;
+            }
+
+            Console.ForegroundColor = EntityColour;
+            Console.SetCursorPosition(newPosX, newPosY);
+            Console.Write(Character);
+            Console.ResetColor();
+
+            PositionX = newPosX;
+            PositionY = newPosY;
         }
     }
 

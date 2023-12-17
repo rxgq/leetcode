@@ -2,17 +2,17 @@
 
 internal class Program
 {
-    public const int GRID_WIDTH = 32;
-    public const int GRID_HEIGHT = 16;
+    public const int GRID_WIDTH = 60;
+    public const int GRID_HEIGHT = 30;
     public const string NODE = ".";
-    public const int SIMULATION_SPEED_MS = 50;
+    public const int SIMULATION_SPEED_MS = 0;
     public const int ITERATION_POSITION_X = GRID_WIDTH + 1;
 
-    public const int ENTITY_COUNT = 0;
-    public const int FOOD_PATTERN_GENE_ENTITY_COUNT = 1;
+    public const int ENTITY_COUNT = 40;
+    public const int FOOD_PATTERN_GENE_ENTITY_COUNT = 40;
 
-    public const int FOOD_COUNT_PER_ITERATION = 1;
-    public const int FOOD_CLUSTERS = 5;
+    public const int FOOD_COUNT_PER_ITERATION = 4; // this may still spawn food on top of clusters ( it does )
+    public const int FOOD_CLUSTERS = 0;
 
     public static readonly List<Entity> ListOfEntities = new();
     public static readonly List<Food> ListOfFood = new();
@@ -72,7 +72,7 @@ internal class Program
                     Console.Write(NODE);
                 }
 
-                if (entity.CollectedFood.Count > 1)
+                if (entity.CollectedFood.Count > 2)
                 {
                     entity.Reproduce();
                 }
@@ -82,7 +82,15 @@ internal class Program
                     entity.ConsumeFood();
                 }
 
-                entity.Move();
+                if (entity.FoodPatternGene == false) 
+                {
+                    entity.Move();
+                }
+
+                if (entity.FoodPatternGene == true) 
+                {
+                    entity.FoodPatternMove();
+                }
             }
 
             foreach (Entity entityToRemove in entitiesToRemove)
@@ -90,6 +98,11 @@ internal class Program
                 ListOfEntities.Remove(entityToRemove);
                 Console.SetCursorPosition(entityToRemove.PositionX, entityToRemove.PositionY);
                 Console.Write(NODE);
+            }
+
+            foreach (FoodCluster foodCluster in ListOfFoodClusters) 
+            {
+                foodCluster.GenerateFood();
             }
         }
     }
@@ -176,19 +189,28 @@ internal class Program
         }
     }
 
-    public static void DisplayControlVariables(int iteration) 
+    public static void DisplayControlVariables(int iteration)
     {
+        int countWithFoodPattern = ListOfEntities.Count(entity => entity.FoodPatternGene);
+        int countWithoutFoodPattern = ListOfEntities.Count(entity => !entity.FoodPatternGene);
 
         Console.SetCursorPosition(ITERATION_POSITION_X, 0);
-        Console.WriteLine($"Iteration        {iteration} ");
+        Console.WriteLine($"Iteration                         {iteration} ");
 
         Console.SetCursorPosition(ITERATION_POSITION_X, 2);
-        Console.WriteLine($"Entity Count     {ListOfEntities.Count} ");
+        Console.WriteLine($"Entities (with Food Pattern)      {countWithFoodPattern} ");
 
         Console.SetCursorPosition(ITERATION_POSITION_X, 3);
-        Console.WriteLine($"Max Entities     {highestEntityCount} ");
+        Console.WriteLine($"Entities (without Food Pattern)   {countWithoutFoodPattern} ");
 
         Console.SetCursorPosition(ITERATION_POSITION_X, 4);
-        Console.WriteLine($"Average Entities {Math.Round((double)averageEntityCount / iteration, 2)} ");
+        Console.WriteLine($"Max Entities                      {highestEntityCount} ");
+
+        Console.SetCursorPosition(ITERATION_POSITION_X, 5);
+        Console.WriteLine($"Average Entities                  {Math.Round((double)averageEntityCount / iteration, 2)} ");
+
+        Console.SetCursorPosition(ITERATION_POSITION_X, 6);
+        Console.WriteLine($"Food Clusters                     {ListOfFoodClusters.Count} ");
     }
+
 }
