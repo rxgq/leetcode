@@ -13,4 +13,3 @@ internal class Food
         PositionY = positionY;
     }
 }
-

@@ -6,8 +6,10 @@ internal class Program
     public const int GRID_HEIGHT = 16;
     public const string NODE = ".";
     public const int SIMULATION_SPEED_MS = 10;
+
     public const int ENTITY_COUNT = 1;
-    public const int FOOD_COUNT_PER_ITERATION = 2;
+    public const int FOOD_PATTERN_GENE_ENTITY_COUNT = 1;
+    public const int FOOD_COUNT_PER_ITERATION = 4;
     public const int ITERATION_POSITION_X = GRID_WIDTH + 1;
 
     public static readonly List<Entity> ListOfEntities = new();
@@ -45,13 +47,12 @@ internal class Program
             if (ListOfEntities.Count == 0)
             {
                 Console.Clear();
-                Console.SetCursorPosition(ITERATION_POSITION_X, 0);
                 Console.Write($"All entities are dead. Final Iteration: {iteration}");
                 Console.ReadKey();
                 return;
             }
 
-            List<Entity> entitiesToRemove = new List<Entity>();
+            List<Entity> entitiesToRemove = new();
             DisplayControlVariables(iteration);
 
             foreach (Entity entity in ListOfEntities.ToList())
@@ -105,12 +106,8 @@ internal class Program
 
     public static List<Entity> CreateEntities()
     {
-        int entityID = 1;
-
         for (int i = 0; i < ENTITY_COUNT; i++)
         {
-            string entityName = $"Entity {entityID}";
-
             int positionX, positionY;
             do
             {
@@ -119,10 +116,24 @@ internal class Program
             } while (ListOfEntities.Any(entity => entity.PositionX == positionX && entity.PositionY == positionY));
 
             Console.SetCursorPosition(positionX, positionY);
-            Entity newEntity = new(entityName, positionX, positionY);
+            Entity newEntity = new(positionX, positionY, false, ConsoleColor.Yellow);
 
             ListOfEntities.Add(newEntity);
-            entityID++;
+        }
+
+        for (int i = 0; i < FOOD_PATTERN_GENE_ENTITY_COUNT; i++)
+        {
+            int positionX, positionY;
+            do
+            {
+                positionY = Random.Next(0, GRID_HEIGHT);
+                positionX = Random.Next(0, GRID_WIDTH);
+            } while (ListOfEntities.Any(entity => entity.PositionX == positionX && entity.PositionY == positionY));
+
+            Console.SetCursorPosition(positionX, positionY);
+            Entity newEntity = new(positionX, positionY, true, ConsoleColor.Red);
+
+            ListOfEntities.Add(newEntity);
         }
         return ListOfEntities;
     }

@@ -2,22 +2,23 @@
 
 internal class Entity
 {
-    public string EntityName;
     public string Character = "0";
-    public ConsoleColor EntityColour = ConsoleColor.Yellow;
+    public ConsoleColor EntityColour;
 
     public int PositionX;
     public int PositionY;
-    public int IterationsUntilDeath = 40;
+    public int IterationsUntilDeath = 48;
+    public bool FoodPatternGene;
 
     public List<Food> CollectedFood = new();
     
 
-    public Entity(string entityName, int positionX, int positionY)
+    public Entity(int positionX, int positionY, bool foodPatternGene, ConsoleColor entityColour)
     {
-        EntityName = entityName;
         PositionX = positionX;
         PositionY = positionY;
+        FoodPatternGene = foodPatternGene;
+        EntityColour = entityColour;
     }
 
     public void Move()
@@ -128,7 +129,7 @@ internal class Entity
                     newPositionY >= 0 && newPositionY < Program.GRID_HEIGHT &&
                     !EntityAtPosition(newPositionX, newPositionY))
                 {
-                    Entity newEntity = new($"Entity {Program.ListOfEntities.Count + 1}", newPositionX, newPositionY);
+                    Entity newEntity = new(newPositionX, newPositionY, FoodPatternGene, EntityColour);
                     Program.ListOfEntities.Add(newEntity);
 
                     Console.SetCursorPosition(newPositionX, newPositionY);
