@@ -51,7 +51,7 @@ internal class Entity
                 break;
         }
 
-        if (!EntityAtPosition(newPosX, newPosY))
+        if (!EntityOrFoodClusterAtPosition(newPosX, newPosY))
         {
             Console.SetCursorPosition(previousX, previousY);
             Console.Write(Program.NODE);
@@ -96,11 +96,18 @@ internal class Entity
     }
 
 
-    public bool EntityAtPosition(int positionX, int positionY) 
+    public static bool EntityOrFoodClusterAtPosition(int positionX, int positionY) 
     {
         foreach (Entity entity in Program.ListOfEntities)
         {
             if (entity.PositionX == positionX && entity.PositionY == positionY)
+            {
+                return true;
+            }
+        }
+        foreach (FoodCluster foodCluster in Program.ListOfFoodClusters)
+        {
+            if (foodCluster.PositionX == positionX && foodCluster.PositionY == positionY)
             {
                 return true;
             }
@@ -127,7 +134,7 @@ internal class Entity
 
                 if (newPositionX >= 0 && newPositionX < Program.GRID_WIDTH &&
                     newPositionY >= 0 && newPositionY < Program.GRID_HEIGHT &&
-                    !EntityAtPosition(newPositionX, newPositionY))
+                    !EntityOrFoodClusterAtPosition(newPositionX, newPositionY))
                 {
                     Entity newEntity = new(newPositionX, newPositionY, FoodPatternGene, EntityColour);
                     Program.ListOfEntities.Add(newEntity);
