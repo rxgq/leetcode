@@ -2,28 +2,40 @@
 
 class Grid
 {
-    const int GRID_X = 20;
-    const int GRID_Y = 10;
-    const char GRID_CHAR = '.';
+    public const int X = 20;
+    public const int Y = 10;
+    public const char NODE = '.';
 
-    const int POPULATION = 10;
+    const int POPULATION = 1;
+
+    static List<Entity> population = new();
 
     static void Main() 
     {
         BuildGrid();
         PopulateGrid();
-        Console.ReadKey();
+
+        while (true) 
+        {
+            foreach (var entity in population) 
+            {
+                entity.Move();
+            }
+
+            Console.ReadKey();
+
+        }
     }
 
     static void BuildGrid()
     {
-        for (int i = 0; i < GRID_Y; i++)
+        for (int i = 0; i < Y; i++)
         {
-            Console.Write(GRID_CHAR);
+            Console.Write(NODE);
 
-            for (int j = 0; j < GRID_X; j++)
+            for (int j = 0; j < X; j++)
             {
-                Console.Write(GRID_CHAR);
+                Console.Write(NODE);
             }
             Console.WriteLine();
         }
@@ -33,13 +45,13 @@ class Grid
     {
         Random rnd = new();
 
-
         for (int i = 0; i < POPULATION; i++)
         {
-            int randX = rnd.Next(GRID_X);
-            int randY = rnd.Next(GRID_Y);
+            int randX = rnd.Next(X + 1);
+            int randY = rnd.Next(Y);
 
-            Entity entity = new();
+            Entity entity = new(randX, randY);
+            population.Add(entity);
 
             Console.SetCursorPosition(randX, randY);
             Console.Write(entity.SYMBOL);
