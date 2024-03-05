@@ -6,9 +6,10 @@ class Grid
     public const int Y = 10;
     public const char NODE = '.';
 
-    const int POPULATION = 1;
+    const int POPULATION = 100;
+    const int SIMULATION_SPEED_MS = 300;
 
-    static List<Entity> population = new();
+    public static List<Entity> population = new();
 
     static void Main() 
     {
@@ -22,8 +23,7 @@ class Grid
                 entity.Move();
             }
 
-            Console.ReadKey();
-
+            Thread.Sleep(SIMULATION_SPEED_MS);
         }
     }
 
@@ -54,7 +54,7 @@ class Grid
             population.Add(entity);
 
             Console.SetCursorPosition(randX, randY);
-            Console.Write(entity.SYMBOL);
+            entity.Write();
         }
     }
 }

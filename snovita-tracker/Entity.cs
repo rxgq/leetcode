@@ -6,12 +6,19 @@ internal class Entity
     public int Y { get; set; }
 
     public char SYMBOL = '0';
-    public ConsoleColor COLOUR = ConsoleColor.Blue;
+    public ConsoleColor COLOUR = ConsoleColor.Yellow;
 
-    public Entity(int x, int y) 
+    public Entity(int x, int y)
     {
         X = x;
         Y = y;
+    }
+
+    public void Write() 
+    { 
+        Console.ForegroundColor = COLOUR;
+        Console.Write(SYMBOL);
+        Console.ResetColor();
     }
 
     public void Move() 
@@ -42,8 +49,7 @@ internal class Entity
                 break;
         }
 
-        if (X >= Console.WindowWidth - 1 || Y >= Console.WindowHeight - 1 || X < 0 || Y < 0
-            || X >= Grid.X || Y >= Grid.Y)
+        if (X < 0 || Y < 0 || X >= Grid.X || Y >= Grid.Y || Grid.population.Any(entity => entity != this && entity.X == X && entity.Y == Y))
         {
             X = previousX;
             Y = previousY;
@@ -54,6 +60,6 @@ internal class Entity
         Console.Write(Grid.NODE);
 
         Console.SetCursorPosition(X, Y);
-        Console.Write(SYMBOL);
+        Write();
     }
 }
