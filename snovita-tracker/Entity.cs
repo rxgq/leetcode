@@ -18,6 +18,7 @@ internal class Entity
     { 
         Console.ForegroundColor = COLOUR;
         Console.Write(SYMBOL);
+
         Console.ResetColor();
     }
 
@@ -25,31 +26,16 @@ internal class Entity
     {
         Random rnd = new();
 
-        int direction = rnd.Next(4);
-
         int previousX = X;
         int previousY = Y;
 
-        switch (direction) 
-        {
-            case 0:
-                X += 1; // right
-                break;
+        int direction = rnd.Next(4);
 
-            case 1:
-                X -= 1; // left
-                break;
+        X += direction == 0 ? 1 : (direction == 1 ? -1 : 0);
+        Y += direction == 2 ? -1 : (direction == 3 ? 1 : 0);
 
-            case 2:
-                Y -= 1; // up
-                break;
-
-            case 3:
-                Y += 1; // down
-                break;
-        }
-
-        if (X < 0 || Y < 0 || X >= Grid.X || Y >= Grid.Y || Grid.population.Any(entity => entity != this && entity.X == X && entity.Y == Y))
+        if (X < 0 || Y < 0 || X >= Grid.X + 1 || Y >= Grid.Y || 
+            Grid.population.Any(entity => entity != this && entity.X == X && entity.Y == Y))
         {
             X = previousX;
             Y = previousY;

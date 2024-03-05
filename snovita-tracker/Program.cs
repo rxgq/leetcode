@@ -1,4 +1,6 @@
-﻿namespace life;
+﻿using Microsoft.VisualBasic;
+
+namespace life;
 
 class Grid
 {
@@ -7,54 +9,57 @@ class Grid
     public const char NODE = '.';
 
     const int POPULATION = 100;
-    const int SIMULATION_SPEED_MS = 300;
+    const int SIMULATION_SPEED_MS = 0;
 
     public static List<Entity> population = new();
+    static Random rnd = new();
 
     static void Main() 
     {
         BuildGrid();
         PopulateGrid();
 
-        while (true) 
-        {
-            foreach (var entity in population) 
-            {
-                entity.Move();
-            }
+        int iteration = 0;
 
-            Thread.Sleep(SIMULATION_SPEED_MS);
+        while (true)
+        {
+            Console.SetCursorPosition(X + 2, 0);
+            Console.Write($"Iteration: {iteration}");
+
+            Iterate();
+
+            iteration++;
         }
+    }
+
+    static void Iterate() 
+    {
+        foreach (var entity in population)
+        {
+            entity.Move();
+        }
+
+        Thread.Sleep(SIMULATION_SPEED_MS);
     }
 
     static void BuildGrid()
     {
         for (int i = 0; i < Y; i++)
         {
-            Console.Write(NODE);
-
-            for (int j = 0; j < X; j++)
-            {
-                Console.Write(NODE);
-            }
-            Console.WriteLine();
+            Console.WriteLine(new string(NODE, X + 1));
         }
     }
 
     static void PopulateGrid() 
     {
-        Random rnd = new();
-
         for (int i = 0; i < POPULATION; i++)
         {
-            int randX = rnd.Next(X + 1);
-            int randY = rnd.Next(Y);
+            int randX = rnd.Next(X + 1), randY = rnd.Next(Y);
 
-            Entity entity = new(randX, randY);
-            population.Add(entity);
+            population.Add(new Entity(randX, randY));
 
-            Console.SetCursorPosition(randX, randY);
-            entity.Write();
+            Console.SetCursorPosition(randX, randY); 
+            population[i].Write();
         }
     }
 }
