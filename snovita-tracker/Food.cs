@@ -13,6 +13,4 @@ internal class Food
         X = x;
         Y = y;
     }
-
-
 }

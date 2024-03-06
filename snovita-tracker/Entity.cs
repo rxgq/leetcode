@@ -45,12 +45,12 @@ internal class Entity
             return;
         }
 
-        if (Grid.FoodList.Any(food => food.X == X && food.Y == Y))
-        {
-            FoodCount++;
-            var foundFood = Grid.FoodList.FirstOrDefault(food => food.X == X && food.Y == Y);
+        var foundFood = Grid.FoodList.FirstOrDefault(food => food.X == X && food.Y == Y);
 
-            if (foundFood is not null) Grid.FoodList.Remove(foundFood);          
+        if (foundFood is not null && FoodCount < 2)
+        {
+            Grid.FoodList.Remove(foundFood);
+            FoodCount++;
         }
 
         Console.ForegroundColor = Grid.COLOUR;
