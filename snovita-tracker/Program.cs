@@ -2,21 +2,20 @@
 
 class Grid
 {
-    public const int X = 70;
-    public const int Y = 20;
+    public const int X = 30;
+    public const int Y = 15;
     public const char NODE = '.';
-
-    const int POPULATION = 1;
-    const int SIMULATION_SPEED_MS = 0;
-
-    const int FOOD_PER_ITERATION = 40;
     public const int ITERATIONS_UNTIL_DEATH = 10;
+    
+    const int SIMULATION_SPEED_MS = 0;
+    const int POPULATION = 1;
+    const int FOOD_PER_ITERATION = 10;
 
     public static int EntityDeaths = 0;
     public static int FoodSpawned = 0;
     public static int AverageEntites = 0;
     public static int MaxEntities = 0;
-    public static int TotalEntitiesEverSpawned = 0;
+    public static int TotalEntites = 0;
 
     public static ConsoleColor COLOUR = ConsoleColor.White;  
 
@@ -77,24 +76,31 @@ class Grid
 
         string[] variables = new string[]
         {
-        $"Iteration: {Iteration}",
-        $"Entity Count: {Population.Count}",
-        $"Entity Deaths: {EntityDeaths}",
-        $"Food Spawned: {FoodSpawned}",
-        $"Max Entities: {MaxEntities}",
-        $"Average Entities: {AverageEntites}"
+        $"Iteration:           {Iteration}",
+        $"Entity Count:        {Population.Count}",
+        $"Entity Deaths:       {EntityDeaths}",
+        $"Food Spawned:        {FoodSpawned}",
+        $"Max Entities:        {MaxEntities}",
+        $"Average Entities:    {AverageEntites}",
         };
 
         for (int i = 0; i < variables.Length; i++)
         {
+            Console.ForegroundColor = variables[i].Contains(
+                $"Iteration") ? ConsoleColor.White : variables[i].Contains(
+                $"Count") ? ConsoleColor.Yellow : variables[i].Contains(
+                $"Deaths") ? ConsoleColor.Red : ConsoleColor.DarkGray;
+
+
             Console.SetCursorPosition(X + 2, i);
             Console.Write(new string(' ', Console.WindowWidth - (X + 2)));
 
             Console.SetCursorPosition(X + 2, i);
             Console.Write(variables[i]);
+
+            Console.ResetColor();
         }
     }
-
 
     static void Iterate()
     {
@@ -115,8 +121,12 @@ class Grid
             if (entity.FoodCount >= 2) entity.Reproduce();
         }
 
-        TotalEntitiesEverSpawned += Population.Count;
-        if (Iteration is not 0) AverageEntites = TotalEntitiesEverSpawned / Iteration;
+        TotalEntites += Population.Count;
+
+        if (Iteration is not 0) 
+        {
+            AverageEntites = TotalEntites / Iteration;
+        }
 
         if (Population.Count > MaxEntities)
         {
