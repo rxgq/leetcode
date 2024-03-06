@@ -9,13 +9,16 @@ class Grid
     
     const int SIMULATION_SPEED_MS = 0;
     const int POPULATION = 1;
-    const int FOOD_PER_ITERATION = 10;
+    static int FOOD_PER_ITERATION = 8;
 
     public static int EntityDeaths = 0;
     public static int FoodSpawned = 0;
     public static int AverageEntites = 0;
     public static int MaxEntities = 0;
     public static int TotalEntites = 0;
+
+    static bool IsExtinct = false;
+    static bool ForcedExtinction = false;
 
     public static ConsoleColor COLOUR = ConsoleColor.White;  
 
@@ -30,9 +33,10 @@ class Grid
     {
         BuildGrid();
         PopulateGrid();
+        Task.Run(() => ListenForKeyPress());
 
         while (true)
-        {
+        { 
             DisplayControlVariables();
             Iterate();
 
@@ -76,7 +80,7 @@ class Grid
 
         string[] variables = new string[]
         {
-        $"Iteration:           {Iteration}",
+        $"Iteration:         {Iteration}",
         $"Entity Count:        {Population.Count}",
         $"Entity Deaths:       {EntityDeaths}",
         $"Food Spawned:        {FoodSpawned}",
@@ -87,10 +91,10 @@ class Grid
         for (int i = 0; i < variables.Length; i++)
         {
             Console.ForegroundColor = variables[i].Contains(
-                $"Iteration") ? ConsoleColor.White : variables[i].Contains(
-                $"Count") ? ConsoleColor.Yellow : variables[i].Contains(
-                $"Deaths") ? ConsoleColor.Red : ConsoleColor.DarkGray;
-
+                "Iteration") ? ConsoleColor.White : variables[i].Contains(
+                "Count") ? Entity.COLOUR : variables[i].Contains(
+                "Deaths") ? ConsoleColor.Red : variables[i].Contains(
+                "Food") ? Food.COLOUR : ConsoleColor.DarkGray;
 
             Console.SetCursorPosition(X + 2, i);
             Console.Write(new string(' ', Console.WindowWidth - (X + 2)));
@@ -121,21 +125,11 @@ class Grid
             if (entity.FoodCount >= 2) entity.Reproduce();
         }
 
-        TotalEntites += Population.Count;
-
-        if (Iteration is not 0) 
-        {
-            AverageEntites = TotalEntites / Iteration;
-        }
-
-        if (Population.Count > MaxEntities)
-        {
-            MaxEntities = Population.Count;
-        }
+        UpdateAverageAndMaxEntities();
+        CheckIfExtinct();
 
         Thread.Sleep(SIMULATION_SPEED_MS);
     }
-
 
     static void RemoveDeadEntities() 
     {
@@ -174,5 +168,63 @@ class Grid
             Console.SetCursorPosition(randX, randY);
             Console.Write(Food.SYMBOL);
         }   
+    }
+
+    static void UpdateAverageAndMaxEntities() 
+    {
+        TotalEntites += Population.Count;
+
+        if (Iteration is not 0)
+        {
+            AverageEntites = TotalEntites / Iteration;
+        }
+
+        if (Population.Count > MaxEntities)
+        {
+            MaxEntities = Population.Count;
+        }
+    }
+
+    static void CheckIfExtinct() 
+    {
+        if (!IsExtinct && Population.Count is 0)
+        {
+            int extinctionIteration = Iteration;
+            IsExtinct = true;
+
+            Console.SetCursorPosition(X + 2, 7);
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write($"{(ForcedExtinction ? "Forced " : "")}Extinction at Iteration: {extinctionIteration}");
+
+            Console.ReadKey();
+        }
+    }
+
+    static void ListenForKeyPress()
+    {
+        while (true)
+        {
+            if (Console.KeyAvailable)
+            {
+                var key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.F)
+                {
+                    ForcedExtinction = true;
+                    FOOD_PER_ITERATION = 0;
+                }
+                else if (key == ConsoleKey.UpArrow) 
+                {
+                    FOOD_PER_ITERATION++;
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    FOOD_PER_ITERATION--;
+                }
+            }
+
+            Thread.Sleep(100);
+        }
     }
 }
