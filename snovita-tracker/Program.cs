@@ -4,16 +4,20 @@ namespace life;
 
 class Grid
 {
-    public const int X = 20;
-    public const int Y = 10;
+    public const int X = 40;
+    public const int Y = 20;
     public const char NODE = '.';
 
     const int POPULATION = 20;
-    const int SIMULATION_SPEED_MS = 100;
+    const int SIMULATION_SPEED_MS = 250;
+
+    const int FOOD_PER_ITERATION = 8;
 
     public static ConsoleColor COLOUR = ConsoleColor.White;  
 
-    public static List<Entity> population = new();
+    public static List<Entity> Population = new();
+    public static List<Food> FoodList = new();
+
     static readonly Random rnd = new();
 
     static void Main() 
@@ -34,19 +38,10 @@ class Grid
         }
     }
 
-    static void Iterate() 
-    {
-        foreach (var entity in population)
-        {
-            entity.Move();
-        }
-
-        Thread.Sleep(SIMULATION_SPEED_MS);
-    }
-
     static void BuildGrid()
     {
         Console.ForegroundColor = COLOUR;
+
         for (int i = 0; i < Y; i++)
         {
             Console.WriteLine(new string(NODE, X));
@@ -64,12 +59,51 @@ class Grid
                 randX = rnd.Next(X);
                 randY = rnd.Next(Y);
 
-            } while (population.Any(entity => entity.X == randX && entity.Y == randY));
+            } while (Population.Any(entity => entity.X == randX && entity.Y == randY));
 
-            population.Add(new Entity(randX, randY));
+            Population.Add(new Entity(randX, randY));
 
             Console.SetCursorPosition(randX, randY);
-            population[i].Write();
+            Population[i].Write();
         }
+    }
+
+    static void Iterate() 
+    {
+        GenerateFood();
+
+        var entitiesToRemove = Population.Where(entity => entity.IterationsUntilDeath == 0).ToList();
+
+        foreach (var entity in entitiesToRemove)
+        {
+            Population.Remove(entity);
+            Console.SetCursorPosition(entity.X, entity.Y);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(NODE);
+        }
+
+        foreach (var entity in Population)
+        {
+            entity.Move();
+            entity.IterationsUntilDeath--;
+        }
+
+        Thread.Sleep(SIMULATION_SPEED_MS);
+    }
+
+    static void GenerateFood() 
+    {
+        for (int i = 0; i < FOOD_PER_ITERATION; i++) 
+        {
+            int randX = rnd.Next(X), randY = rnd.Next(Y);
+
+            Food food = new(randX, randY);
+            FoodList.Add(food);
+
+            Console.ForegroundColor = Food.COLOUR;
+
+            Console.SetCursorPosition(randX, randY);
+            Console.Write(Food.SYMBOL);
+        }   
     }
 }

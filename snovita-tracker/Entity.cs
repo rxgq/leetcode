@@ -5,8 +5,11 @@ internal class Entity
     public int X { get; set; }
     public int Y { get; set; }
 
-    public char SYMBOL = '0';
-    public ConsoleColor COLOUR = ConsoleColor.Yellow;
+    public int IterationsUntilDeath = 10;
+    public List<int> FoodCount = new();
+
+    public static char SYMBOL = '0';
+    public static ConsoleColor COLOUR = ConsoleColor.Yellow;
 
     public Entity(int x, int y)
     {
@@ -35,11 +38,16 @@ internal class Entity
         Y += direction == 2 ? -1 : (direction == 3 ? 1 : 0);
 
         if (X < 0 || Y < 0 || X >= Grid.X  || Y >= Grid.Y || 
-            Grid.population.Any(entity => entity != this && entity.X == X && entity.Y == Y))
+            Grid.Population.Any(entity => entity != this && entity.X == X && entity.Y == Y))
         {
             X = previousX;
             Y = previousY;
             return;
+        }
+
+        if (Grid.FoodList.Any(food => food.X == X && food.Y == Y)) 
+        {
+            IterationsUntilDeath = 10;
         }
 
         Console.ForegroundColor = Grid.COLOUR;
