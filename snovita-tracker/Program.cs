@@ -4,15 +4,17 @@ namespace life;
 
 class Grid
 {
-    public const int X = 4;
-    public const int Y = 4;
+    public const int X = 20;
+    public const int Y = 10;
     public const char NODE = '.';
 
-    const int POPULATION = 10;
+    const int POPULATION = 20;
     const int SIMULATION_SPEED_MS = 100;
 
+    public static ConsoleColor COLOUR = ConsoleColor.White;  
+
     public static List<Entity> population = new();
-    static Random rnd = new();
+    static readonly Random rnd = new();
 
     static void Main() 
     {
@@ -44,9 +46,10 @@ class Grid
 
     static void BuildGrid()
     {
+        Console.ForegroundColor = COLOUR;
         for (int i = 0; i < Y; i++)
         {
-            Console.WriteLine(new string(NODE, X + 1));
+            Console.WriteLine(new string(NODE, X));
         }
     }
 
@@ -58,12 +61,13 @@ class Grid
 
             do
             {
-                randX = rnd.Next(X + 1);
+                randX = rnd.Next(X);
                 randY = rnd.Next(Y);
 
             } while (population.Any(entity => entity.X == randX && entity.Y == randY));
 
             population.Add(new Entity(randX, randY));
+
             Console.SetCursorPosition(randX, randY);
             population[i].Write();
         }
