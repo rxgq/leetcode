@@ -5,7 +5,7 @@ internal class Food
     public int X { get; set; }
     public int Y { get; set; }
 
-    public static char SYMBOL = '+';
+    public static char SYMBOL = 'C';
     public static ConsoleColor COLOUR = ConsoleColor.Green;
 
     public Food(int x, int y) 
@@ -13,4 +13,6 @@ internal class Food
         X = x;
         Y = y;
     }
+
+
 }

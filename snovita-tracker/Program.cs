@@ -8,10 +8,11 @@ class Grid
     public const int Y = 20;
     public const char NODE = '.';
 
-    const int POPULATION = 20;
-    const int SIMULATION_SPEED_MS = 250;
+    const int POPULATION = 222;
+    const int SIMULATION_SPEED_MS = 0;
 
-    const int FOOD_PER_ITERATION = 8;
+    const int FOOD_PER_ITERATION = 4;
+    public const int ITERATIONS_UNTIL_DEATH = 10;
 
     public static ConsoleColor COLOUR = ConsoleColor.White;  
 
@@ -29,9 +30,7 @@ class Grid
 
         while (true)
         {
-            Console.SetCursorPosition(X + 2, 0);
-            Console.Write($"Iteration: {iteration}");
-
+            DisplayControlVariables(iteration);
             Iterate();
 
             iteration++;
@@ -64,31 +63,61 @@ class Grid
             Population.Add(new Entity(randX, randY));
 
             Console.SetCursorPosition(randX, randY);
-            Population[i].Write();
+            Population[i].WriteEntity();
         }
+    }
+
+    static void DisplayControlVariables(int iteration)
+    {
+        Console.ForegroundColor = COLOUR;
+        Console.SetCursorPosition(X + 2, 0);
+        Console.Write(new string(' ', Console.WindowWidth - (X + 2)));
+
+        Console.SetCursorPosition(X + 2, 0);
+        Console.Write($"Iteration: {iteration}");
+
+        Console.SetCursorPosition(X + 2, 1);
+        Console.Write(new string(' ', Console.WindowWidth - (X + 2)));
+
+        Console.SetCursorPosition(X + 2, 1);
+        Console.Write($"Entity Count: {Population.Count}");
     }
 
     static void Iterate() 
     {
         GenerateFood();
-
-        var entitiesToRemove = Population.Where(entity => entity.IterationsUntilDeath == 0).ToList();
-
-        foreach (var entity in entitiesToRemove)
-        {
-            Population.Remove(entity);
-            Console.SetCursorPosition(entity.X, entity.Y);
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(NODE);
-        }
+        RemoveDeadEntities();
 
         foreach (var entity in Population)
         {
             entity.Move();
             entity.IterationsUntilDeath--;
+
+            if (entity.IterationsUntilDeath == 0 && entity.FoodCount != 0)
+            {
+                entity.FoodCount--;
+                entity.IterationsUntilDeath = ITERATIONS_UNTIL_DEATH;
+            }
+
+            if (entity.FoodCount >= 2) entity.Reproduce();        
         }
 
         Thread.Sleep(SIMULATION_SPEED_MS);
+    }
+
+    static void RemoveDeadEntities() 
+    {
+        var entitiesToRemove = Population.Where(entity => entity.IterationsUntilDeath == 0 && entity.FoodCount == 0).ToList();
+
+        foreach (var entity in entitiesToRemove)
+        {
+            Population.Remove(entity);
+
+            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.SetCursorPosition(entity.X, entity.Y);
+            Console.Write(NODE);
+        }
     }
 
     static void GenerateFood() 
