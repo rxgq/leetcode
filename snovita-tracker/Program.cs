@@ -4,12 +4,12 @@ namespace life;
 
 class Grid
 {
-    public const int X = 20;
-    public const int Y = 10;
+    public const int X = 4;
+    public const int Y = 4;
     public const char NODE = '.';
 
-    const int POPULATION = 100;
-    const int SIMULATION_SPEED_MS = 0;
+    const int POPULATION = 10;
+    const int SIMULATION_SPEED_MS = 100;
 
     public static List<Entity> population = new();
     static Random rnd = new();
@@ -50,15 +50,21 @@ class Grid
         }
     }
 
-    static void PopulateGrid() 
+    static void PopulateGrid()
     {
         for (int i = 0; i < POPULATION; i++)
         {
-            int randX = rnd.Next(X + 1), randY = rnd.Next(Y);
+            int randX, randY;
+
+            do
+            {
+                randX = rnd.Next(X + 1);
+                randY = rnd.Next(Y);
+
+            } while (population.Any(entity => entity.X == randX && entity.Y == randY));
 
             population.Add(new Entity(randX, randY));
-
-            Console.SetCursorPosition(randX, randY); 
+            Console.SetCursorPosition(randX, randY);
             population[i].Write();
         }
     }
