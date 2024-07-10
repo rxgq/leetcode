@@ -3,6 +3,6 @@
 public class Program {
     static void Main() {
         var solution = new Solution();
-        solution.RomanToInt("IIV");
+        solution.LongestCommonPrefix(new string[] { "flower", "flow", "flight" });
     }
 }
