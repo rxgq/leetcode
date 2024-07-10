@@ -3,6 +3,6 @@
 public class Program {
     static void Main() {
         var solution = new Solution();
-        solution.IsPalindrome(-121);
+        solution.RomanToInt("IIV");
     }
 }
