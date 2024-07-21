@@ -1,4 +1,4 @@
-﻿namespace leetcode;
+﻿namespace leetcode.easy;
 
 public class ListNode {
     public int val;
