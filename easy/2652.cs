@@ -1,6 +1,6 @@
 ﻿namespace leetcode.easy;
 
-public class Solution
+public partial class Solution
 {
     public int SumOfMultiples(int n)
     {

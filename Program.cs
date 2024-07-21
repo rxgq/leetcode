@@ -1,8 +1,8 @@
-﻿namespace leetcode;
+﻿namespace leetcode.easy;
 
 public class Program {
     static void Main() {
         var solution = new Solution();
-        solution.PlusOne(new int[] { 9 });
+        solution.CheckIfPanagram("thequickbrownfoxjumpsoverthelazydog");
     }
 }
