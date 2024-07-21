@@ -1,4 +1,4 @@
-﻿namespace leetcode;
+﻿namespace leetcode.easy;
 
 public partial class Solution
 {

@@ -1,4 +1,4 @@
-namespace leetcode;
+namespace leetcode.easy;
 
 public partial class Solution {
     public int[] TwoSum(int[] nums, int target) {
