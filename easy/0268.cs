@@ -17,5 +17,16 @@ public partial class Solution
         }
 
         return left;
+
+        // alternatively:
+
+        int acc = 0;
+        int n = nums.Length;
+        int sum = n * (n + 1) / 2;
+
+        for (int i = 0; i < n; i++)
+            acc += nums[i];
+
+        return sum - acc;
     }
 }
