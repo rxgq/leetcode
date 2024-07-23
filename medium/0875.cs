@@ -14,14 +14,14 @@ public partial class Solution
         {
             int mid = (left + right) / 2;
 
-            if (canEatAll(piles, h, mid)) right = mid - 1;
+            if (CanEatAll(piles, h, mid)) right = mid - 1;
             else left = mid + 1;
         }
 
         return left;
     }
 
-    private bool canEatAll(int[] piles, int h, int k)
+    private bool CanEatAll(int[] piles, int h, int k)
     {
         int hoursNeeded = 0;
 
