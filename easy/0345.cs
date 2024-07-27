@@ -4,8 +4,6 @@ public partial class Solution
 {
     public string ReverseVowels(string s)
     {
-        if (s == null || s.Length == 0) return s;
-
         int i = 0; int j = s.Length - 1;
         string vowels = "aeiouAEIOU";
 
