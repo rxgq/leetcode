@@ -1,4 +1,4 @@
-namespace leetcode.easy;''
+namespace leetcode.easy;
 
 public partial class Solution {
     public int RepeatedNTimes(int[] nums) {
