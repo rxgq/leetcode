@@ -6,7 +6,7 @@ public partial class Solution {
         int doubleSum = 0;
 
         foreach (int num in nums) {
-            int n = (num.ToString()).Length;
+            int n = num.ToString().Length;
             if (n == 2) doubleSum += num;
             else singleSum += num;
         }
