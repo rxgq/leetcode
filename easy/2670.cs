@@ -9,7 +9,7 @@ public partial class Solution {
           var distinctPrefix = new HashSet<int>(nums[..(i + 1)]);
           var distinctSuffix = new HashSet<int>(nums[(i + 1)..]);
 
-s          result[i] = distinctPrefix.Count - distinctSuffix.Count;
+          result[i] = distinctPrefix.Count - distinctSuffix.Count;
         }
 
         return result;
