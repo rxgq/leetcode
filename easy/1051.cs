@@ -6,9 +6,8 @@ public partial class Solution {
         Array.Sort(expected);
 
         int nonMatches = 0;
-        for (int i = 0; i < heights.Length; i++) {
+        for (int i = 0; i < heights.Length; i++)
             if (heights[i] != expected[i]) nonMatches++;
-        }
 
         return nonMatches;
     }
