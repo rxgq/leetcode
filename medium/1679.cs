@@ -1,4 +1,4 @@
-namespace leetcode.easy;
+namespace leetcode.medium;
 
 public partial class Solution {
     public int MaxOperations(int[] nums, int k) {
