@@ -5,9 +5,8 @@ public partial class Solution {
         Array.Sort(nums);
 
         var indices = new List<int>();
-        for (int i = 0; i < nums.Length; i++) {
+        for (int i = 0; i < nums.Length; i++)
             if (nums[i] == target) indices.Add(i);
-        }
 
         return indices;
     }
