@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace leetcode.easy;
 
 public partial class Solution {
