@@ -1,3 +1,5 @@
+using System.Reflection.Metadata.Ecma335;
+
 namespace leetcode.easy;
 
 public partial class Solution {
@@ -6,7 +8,7 @@ public partial class Solution {
         
         for (int i = 1; i < nums.Length; i++)
             if ((nums[i - 1] & 1) == (nums[i] & 1)) return false;
-
+        
         return true;
     }
 }
