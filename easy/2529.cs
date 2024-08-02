@@ -1,4 +1,4 @@
-namespace leetcode.easy;g
+namespace leetcode.easy;
 
 public partial class Solution {
     public int MaximumCount(int[] nums) {
