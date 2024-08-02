@@ -6,7 +6,7 @@ public partial class Solution {
         int num = x ^ y;
 
         while (num != 0) {
-            res += num % 2;
+            res += num & 1;
             num >>= 1;
         }
 
