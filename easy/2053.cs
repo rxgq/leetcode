@@ -13,8 +13,10 @@ public partial class Solution {
             seen.Add(arr[i]);
           }
         }
-              
-        if (k - 1 < unique.Count) return unique[k - 1];
+        
+        if (k - 1 < unique.Count) 
+          return unique[k - 1];
+        
         return "";
     }
 }
