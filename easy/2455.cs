@@ -1,12 +1,12 @@
 namespace leetcode.easy;
 
-public partial class Solution {
+public class Solution {
     public int AverageValue(int[] nums) {
         int count = 0;
         int sum = 0;
 
         foreach (int num in nums) {
-          if (num % 3 == 0 && num % 2 == 0) {
+          if (num % 6 == 0) {
            count++;
            sum += num; 
           }
