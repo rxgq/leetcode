@@ -1,6 +1,6 @@
 namespace leetcode.easy;
 
-public class Solution {
+public partial class Solution {
     public bool IsThree(int n) {
         int divisors = 0;
 

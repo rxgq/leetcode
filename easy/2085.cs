@@ -13,7 +13,7 @@ public partial class Solution {
 
         int count = 0;
         foreach (var kvp in words1Freq) {
-             if (kvp.Value == 1 && words2Freq.TryGetValue(kvp.Key, out int value) && value == 1) {
+            if (kvp.Value == 1 && words2Freq.TryGetValue(kvp.Key, out int value) && value == 1) {
                 count++;
             }
         }
