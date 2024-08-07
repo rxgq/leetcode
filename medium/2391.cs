@@ -18,7 +18,7 @@ public partial class Solution {
 
         for (int j = 0; j < lastIndex; j++)
           sum += travel[j];
-w
+
         return sum;
       }
       

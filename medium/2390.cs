@@ -7,9 +7,8 @@ public partial class Solution {
         var ans = new StringBuilder();
         
         for (int i = 0; i < s.Length; i++) {
-            if (s[i] == '*') {
+            if (s[i] == '*')
                 if (ans.Length > 0) ans.Remove(ans.Length - 1, 1);
-            }
             else ans.Append(s[i]);
         }  
 

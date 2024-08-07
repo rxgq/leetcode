@@ -2,8 +2,6 @@ namespace leetcode.medium;
 
 public partial class Solution {
     public int Compress(char[] chars) {
-        string s = "";
-
         int compressedCount = 0;
         int readIdx = 0;
 

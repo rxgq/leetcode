@@ -20,6 +20,6 @@ public partial class Solution {
         if (charCount % 8 == 0) buttonCount++;
       }
 
-      return count;        
+      return count;
     }
 }

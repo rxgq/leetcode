@@ -6,20 +6,19 @@ public partial class Solution {
         int currentVowels = 0;
 
         for (int i = 0; i < k; i++)
-          if ("aeiouAEIOU".Contains(s[i]))
+            if ("aeiouAEIOU".Contains(s[i]))
             currentVowels++;
 
         maxVowels = currentVowels;
 
         for (int i = k; i < s.Length; i++) {
+            if ("aeiouAEIOU".Contains(s[i - k])) 
+                currentVowels--;
 
-          if ("aeiouAEIOU".Contains(s[i - k])) 
-              currentVowels--;
+            if ("aeiouAEIOU".Contains(s[i])) 
+                currentVowels++;
 
-          if ("aeiouAEIOU".Contains(s[i])) 
-              currentVowels++;
-
-          maxVowels = Math.Max(maxVowels, currentVowels);
+            maxVowels = Math.Max(maxVowels, currentVowels);
         }
 
         return maxVowels;
