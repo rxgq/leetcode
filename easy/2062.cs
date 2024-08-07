@@ -2,14 +2,14 @@ namespace leetcode.easy;
 
 public partial class Solution {
     public int CountVowelSubstrings(string word) {
-        HashSet<char> vowels = new HashSet<char>{ 'a', 'e', 'i', 'o', 'u' };
+        var vowels = new HashSet<char>() { 'a', 'e', 'i', 'o', 'u' };
         int count = 0;
 
         for (int i = 0; i < word.Length; i++) {
             if (!vowels.Contains(word[i]))
                 continue;
 
-            HashSet<char> seenVowels = new HashSet<char>();
+            var seenVowels = new HashSet<char>();
 
             for (int j = i; j < word.Length; j++) {
                 if (vowels.Contains(word[j])) {
