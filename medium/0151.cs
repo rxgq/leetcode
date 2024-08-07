@@ -2,7 +2,6 @@ namespace leetcode.medium;
 
 public partial class Solution {
     public string ReverseWords(string s) {
-        string reversed = "";
         int start = 0;
         
         List<string> words = new();
@@ -21,12 +20,9 @@ public partial class Solution {
         
         int l = 0; 
         int r = words.Count - 1;
-        while (l < r) { 
-          var temp = words[l];
-          words[l] = words[r];
-          words[r] = temp;
-
-          l++; r--;
+        while (l < r) {
+            (words[r], words[l]) = (words[l], words[r]);
+            l++; r--;
         }
 
         return string.Join(" ", words);
