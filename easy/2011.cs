@@ -5,15 +5,8 @@ public partial class Solution
     public int FinalValueAfterOperations(string[] operations)
     {
         int x = 0;
-
         foreach (var op in operations)
-        {
-            if (op[0] == '+' || op[2] == '+')
-                x++;
-
-            else
-                x--;
-        }
+            x += op[0] == '+' || op[2] == '+' ? 1 : -1;
 
         return x;
     }
