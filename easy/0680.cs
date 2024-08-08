@@ -5,7 +5,7 @@ public partial class Solution {
         int l = 0; int r = s.Length - 1;
         while (l < r) {
             if (s[l] != s[r]) {
-                return IsPalindrome(s.Substring(l + 1, r - l)) || IsPalindrome(s.Substring(l, r - l));
+                return IsPalindrome2(s.Substring(l + 1, r - l)) || IsPalindrome2(s.Substring(l, r - l));
             }
 
             l++; r--;
@@ -14,7 +14,7 @@ public partial class Solution {
         return true;
     }
 
-    private bool IsPalindrome(string s) {
+    private bool IsPalindrome2(string s) {
         for (int i = 0; i < s.Length / 2; i++)
             if (s[i] != s[s.Length - i - 1]) return false;
 
