@@ -9,9 +9,15 @@ public partial class Solution {
         var freqOfFreq = new Dictionary<int, int>();
         foreach (int c in freq.Values)
             freqOfFreq[c] = freqOfFreq.TryGetValue(c, out int val) ? ++val : 1;
-    
-        if (freqOfFreq.Count == 1)
-            return freqOfFreq.ContainsKey(1) && freqOfFreq[1] == 1;
+
+        foreach (var kvp in freqOfFreq) Console.Write(kvp.Key + " " + kvp.Value);
+
+        if (freqOfFreq.Count == 1) {
+            foreach (var kvp in freqOfFreq) 
+                if (kvp.Value == 1) return true;
+
+            if (freqOfFreq.ContainsKey(1)) return true;
+        }
 
         if (freqOfFreq.Count == 2) {
             var keys = freqOfFreq.Keys.ToList();
@@ -22,7 +28,7 @@ public partial class Solution {
                 f1 = f2;
                 f2 = temp;
             }
-            
+
             if (f1 == 1 && freqOfFreq[f1] == 1)
                 return true;
             
