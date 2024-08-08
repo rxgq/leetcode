@@ -1,5 +1,6 @@
 namespace leetcode.easy;
 
+// this is not an "easy" question
 public partial class Solution {
     public bool EqualFrequency(string word) {
         var freq = new Dictionary<char, int>();
@@ -23,11 +24,8 @@ public partial class Solution {
             var keys = freqOfFreq.Keys.ToList();
             int f1 = keys[0], f2 = keys[1];
             
-            if (f1 > f2) {
-                int temp = f1;
-                f1 = f2;
-                f2 = temp;
-            }
+            if (f1 > f2)
+                (f2, f1) = (f1, f2);
 
             if (f1 == 1 && freqOfFreq[f1] == 1)
                 return true;
