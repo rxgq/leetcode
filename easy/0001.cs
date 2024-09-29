@@ -1,7 +1,7 @@
 namespace leetcode.easy;
 
 public partial class Solution {
-    public int[] TwoSum(int[] nums, int target) {
+    public int[] TwoSumFirst(int[] nums, int target) {
         var pairs = nums.Select((num, index) => (Num: num, Index: index)).ToArray();
         Array.Sort(pairs, (a, b) => a.Num.CompareTo(b.Num));
 
