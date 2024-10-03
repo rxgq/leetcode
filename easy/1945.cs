@@ -4,7 +4,7 @@ public partial class Solution {
     public int GetLucky(string s, int k) {
         string seq = "";
         foreach (char c in s) 
-            seq += (int)c - 'a' + 1;
+            seq += c - 'a' + 1;
 
         for (int i = 0; i < k; i++) {
 
